@@ -1,0 +1,25 @@
+# node_modules
+node_modules/
+
+# 環境変数
+.env
+.env.*
+
+# OSごとの不要ファイル
+.DS_Store
+Thumbs.db
+
+# ログ
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ビルド成果物
+dist/
+build/
+.next/
+out/
+
+# IDE設定
+.vscode/
+.idea/ 
