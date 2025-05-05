@@ -1,11 +1,20 @@
+'use client';
+
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
+import { useState } from 'react';
 
 export function Header() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  const onSignInButtonClick = () => {
+    setIsSignedIn(!isSignedIn);
+  };
+
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
@@ -25,7 +34,9 @@ export function Header() {
         {/* ナビゲーションやアクション */}
         <Button color="inherit">ブロックリスト</Button>
         <Button color="inherit">設定</Button>
-        <Button color="inherit">ログアウト</Button>
+        <Button color="inherit" onClick={onSignInButtonClick}>
+          {isSignedIn ? 'ログアウト' : 'ログイン'}
+        </Button>
       </Toolbar>
     </AppBar>
   );
