@@ -1,21 +1,32 @@
-import Link from 'next/link';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
 
 export function Header() {
   return (
-    <header>
-      <div>
-        <Link href="/">騎空士ブロッカー</Link>
-        <nav>
-          <ul>
-            <li>
-              <Link href="/about">使い方</Link>
-            </li>
-            <li>
-              <Link href="/dashboard">ダッシュボード</Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <AppBar position="static" color="primary">
+      <Toolbar>
+        {/* ロゴやアイコン */}
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon />
+        </IconButton>
+        {/* サイト名 */}
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          騎空士ブロッカー
+        </Typography>
+        {/* ナビゲーションやアクション */}
+        <Button color="inherit">ブロックリスト</Button>
+        <Button color="inherit">設定</Button>
+        <Button color="inherit">ログアウト</Button>
+      </Toolbar>
+    </AppBar>
   );
 }
