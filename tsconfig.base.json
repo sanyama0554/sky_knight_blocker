@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["packages/shared/*"]
+      "@packages/shared": ["packages/shared/index.ts"]
     }
   }
 }
