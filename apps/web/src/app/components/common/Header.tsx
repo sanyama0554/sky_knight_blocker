@@ -1,6 +1,7 @@
 'use client';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import { Alert } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -21,6 +22,9 @@ export function Header() {
   const [password, setPassword] = useState('');
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [toastSeverity, setToastSeverity] = useState<
+    'success' | 'error' | 'warning' | 'info'
+  >('info');
 
   const { user, isSignedIn, loading } = useAuth();
 
@@ -31,22 +35,26 @@ export function Header() {
       password,
     });
     if (error) {
-      alert(error.message);
+      setToastSeverity('error');
+      setToastMessage(error.message);
     } else {
+      setToastSeverity('success');
       setIsSignInModalOpen(false);
       setToastMessage('サインインに成功しました');
-      setToastOpen(true);
     }
+    setToastOpen(true);
   };
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      alert(error.message);
+      setToastSeverity('error');
+      setToastMessage(error.message);
     } else {
+      setToastSeverity('success');
       setToastMessage('サインアウトしました');
-      setToastOpen(true);
     }
+    setToastOpen(true);
   };
 
   /** サインアップ処理 */
@@ -56,12 +64,14 @@ export function Header() {
       password,
     });
     if (error) {
-      alert(error.message);
+      setToastSeverity('error');
+      setToastMessage(error.message);
     } else {
+      setToastSeverity('success');
       setIsSignUpModalOpen(false);
       setToastMessage('サインアップに成功しました');
-      setToastOpen(true);
     }
+    setToastOpen(true);
   };
 
   return (
@@ -134,8 +144,10 @@ export function Header() {
         autoHideDuration={3000}
         onClose={() => setToastOpen(false)}
         message={toastMessage}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      />
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <Alert severity={toastSeverity}>{toastMessage}</Alert>
+      </Snackbar>
     </>
   );
 }
