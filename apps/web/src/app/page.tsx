@@ -1,7 +1,7 @@
 'use client';
-import React, { useState } from 'react';
-import { BlockCard } from './components/BlockCard';
+import { useState } from 'react';
 import type { Block } from '../types';
+import { BlockListTable } from './components';
 
 const Page = () => {
   const [blocks] = useState<Block[]>([
@@ -13,16 +13,9 @@ const Page = () => {
     },
   ]);
 
-  const handleUnblock = (blockId: string) => {
-    console.log(`ブロック解除: ${blockId}`);
-  };
-
   return (
     <div style={{ padding: '20px' }}>
-      <h1>ブロックリスト</h1>
-      {blocks.map((block) => (
-        <BlockCard key={block.id} block={block} onUnblock={handleUnblock} />
-      ))}
+      <BlockListTable />
     </div>
   );
 };
