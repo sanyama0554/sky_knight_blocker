@@ -7,19 +7,21 @@ import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { useAuth } from 'apps/web/src/hooks/useAuth';
 import { supabase } from 'apps/web/src/lib/supabaseClient';
 import { useState } from 'react';
 import { SignInModal } from '../SignInModal';
 import { SignUpModal } from '../SignUpModal';
 
 export function Header() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  const { user, isSignedIn, loading } = useAuth();
 
   /** サインイン処理 */
   const handleSignIn = async () => {
@@ -32,6 +34,16 @@ export function Header() {
     } else {
       setIsSignInModalOpen(false);
       setToastMessage('サインインに成功しました');
+      setToastOpen(true);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert(error.message);
+    } else {
+      setToastMessage('サインアウトしました');
       setToastOpen(true);
     }
   };
@@ -70,11 +82,15 @@ export function Header() {
           <Button color="inherit">設定</Button>
           <Button
             color="inherit"
-            onClick={() => {
-              setEmail('');
-              setPassword('');
-              setIsSignInModalOpen(true);
-            }}
+            onClick={
+              isSignedIn
+                ? handleSignOut
+                : () => {
+                    setEmail('');
+                    setPassword('');
+                    setIsSignInModalOpen(true);
+                  }
+            }
           >
             {isSignedIn ? 'ログアウト' : 'ログイン'}
           </Button>
