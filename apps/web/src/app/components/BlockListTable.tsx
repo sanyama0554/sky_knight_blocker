@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Button,
   Table,
@@ -9,20 +11,15 @@ import {
 } from '@mui/material';
 import { getUserProfileUrl } from '../../lib/getUserProfileUrl';
 
-const rows = [
-  {
-    id: 1,
-    blocked_user_id: '37971403',
-    description: 'テスト中',
-  },
-  {
-    id: 2,
-    blocked_user_id: '33928799',
-    description: 'テスト中',
-  },
-];
+import { useBlocks } from '../../hooks/useBlocks';
 
 export const BlockListTable = () => {
+  const { blocks, loading, error } = useBlocks();
+  console.log(blocks);
+
+  if (loading) return <div>読み込み中...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+
   return (
     <TableContainer>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -34,7 +31,7 @@ export const BlockListTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {blocks.map((row) => (
             <TableRow
               key={row.blocked_user_id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
