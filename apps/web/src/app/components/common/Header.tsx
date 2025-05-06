@@ -71,6 +71,8 @@ export function Header() {
           <Button
             color="inherit"
             onClick={() => {
+              setEmail('');
+              setPassword('');
               setIsSignInModalOpen(true);
             }}
           >
@@ -88,6 +90,8 @@ export function Header() {
         handleSignIn={handleSignIn}
         onSwitchToSignUp={() => {
           setIsSignInModalOpen(false);
+          setEmail('');
+          setPassword('');
           setIsSignUpModalOpen(true);
         }}
       />
@@ -101,6 +105,8 @@ export function Header() {
         handleSignUp={handleSignUp}
         onSwitchToSignIn={() => {
           setIsSignUpModalOpen(false);
+          setEmail('');
+          setPassword('');
           setIsSignInModalOpen(true);
         }}
       />
