@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { supabase } from 'apps/web/src/lib/supabaseClient';
 import { useState } from 'react';
-import { SignUpModal } from '../SignInModal';
+import { SignInModal } from '../SignInModal';
 export function Header() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +55,7 @@ export function Header() {
           </Button>
         </Toolbar>
       </AppBar>
-      <SignUpModal
+      <SignInModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         email={email}

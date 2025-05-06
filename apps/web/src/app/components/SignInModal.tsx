@@ -1,4 +1,12 @@
-import { Button, Dialog, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  Link,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 interface SignInModalProps {
   isOpen: boolean;
@@ -21,7 +29,8 @@ export const SignInModal = ({
 }: SignInModalProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <div style={{ padding: 24 }}>
+      <DialogTitle>ログイン</DialogTitle>
+      <Box sx={{ padding: 3 }}>
         <TextField
           label="メールアドレス"
           value={email}
@@ -37,10 +46,29 @@ export const SignInModal = ({
           fullWidth
           margin="normal"
         />
-        <Button variant="contained" onClick={handleSignIn} fullWidth>
+        <Button
+          variant="contained"
+          onClick={handleSignIn}
+          fullWidth
+          sx={{ mt: 2 }}
+        >
           ログイン
         </Button>
-      </div>
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Typography variant="body2">
+            アカウントをお持ちでない場合は
+            <Link
+              href="#"
+              onClick={() => {
+                /* SignUpモーダルへの遷移処理 */
+              }}
+            >
+              こちら
+            </Link>
+            から登録してください
+          </Typography>
+        </Box>
+      </Box>
     </Dialog>
   );
 };
