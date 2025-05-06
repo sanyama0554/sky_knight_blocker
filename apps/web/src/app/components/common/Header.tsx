@@ -9,9 +9,11 @@ import Typography from '@mui/material/Typography';
 import { supabase } from 'apps/web/src/lib/supabaseClient';
 import { useState } from 'react';
 import { SignInModal } from '../SignInModal';
+import { SignUpModal } from '../SignUpModal';
 export function Header() {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -24,7 +26,20 @@ export function Header() {
     if (error) {
       alert(error.message);
     } else {
-      setIsOpen(false);
+      setIsSignInModalOpen(false);
+    }
+  };
+
+  /** サインアップ処理 */
+  const handleSignUp = async () => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      alert(error.message);
+    } else {
+      setIsSignUpModalOpen(false);
     }
   };
 
@@ -48,7 +63,7 @@ export function Header() {
           <Button
             color="inherit"
             onClick={() => {
-              setIsOpen(true);
+              setIsSignInModalOpen(true);
             }}
           >
             {isSignedIn ? 'ログアウト' : 'ログイン'}
@@ -56,13 +71,30 @@ export function Header() {
         </Toolbar>
       </AppBar>
       <SignInModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={isSignInModalOpen}
+        onClose={() => setIsSignInModalOpen(false)}
         email={email}
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
         handleSignIn={handleSignIn}
+        onSwitchToSignUp={() => {
+          setIsSignInModalOpen(false);
+          setIsSignUpModalOpen(true);
+        }}
+      />
+      <SignUpModal
+        isOpen={isSignUpModalOpen}
+        onClose={() => setIsSignUpModalOpen(false)}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        handleSignUp={handleSignUp}
+        onSwitchToSignIn={() => {
+          setIsSignUpModalOpen(false);
+          setIsSignInModalOpen(true);
+        }}
       />
     </>
   );

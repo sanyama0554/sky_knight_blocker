@@ -16,6 +16,7 @@ interface SignUpModalProps {
   password: string;
   setPassword: (password: string) => void;
   handleSignUp: () => void;
+  onSwitchToSignIn: () => void;
 }
 
 export const SignUpModal = ({
@@ -26,6 +27,7 @@ export const SignUpModal = ({
   password,
   setPassword,
   handleSignUp,
+  onSwitchToSignIn,
 }: SignUpModalProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -57,12 +59,7 @@ export const SignUpModal = ({
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2">
             すでにアカウントをお持ちの方は
-            <Link
-              href="#"
-              onClick={() => {
-                /* SignInモーダルへの遷移処理 */
-              }}
-            >
+            <Link href="#" onClick={onSwitchToSignIn}>
               こちら
             </Link>
             からログインしてください
