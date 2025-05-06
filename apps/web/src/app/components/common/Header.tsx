@@ -4,18 +4,22 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Snackbar from '@mui/material/Snackbar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { supabase } from 'apps/web/src/lib/supabaseClient';
 import { useState } from 'react';
 import { SignInModal } from '../SignInModal';
 import { SignUpModal } from '../SignUpModal';
+
 export function Header() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   /** サインイン処理 */
   const handleSignIn = async () => {
@@ -27,6 +31,8 @@ export function Header() {
       alert(error.message);
     } else {
       setIsSignInModalOpen(false);
+      setToastMessage('サインインに成功しました');
+      setToastOpen(true);
     }
   };
 
@@ -40,6 +46,8 @@ export function Header() {
       alert(error.message);
     } else {
       setIsSignUpModalOpen(false);
+      setToastMessage('サインアップに成功しました');
+      setToastOpen(true);
     }
   };
 
@@ -95,6 +103,13 @@ export function Header() {
           setIsSignUpModalOpen(false);
           setIsSignInModalOpen(true);
         }}
+      />
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={3000}
+        onClose={() => setToastOpen(false)}
+        message={toastMessage}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       />
     </>
   );
