@@ -1,8 +1,11 @@
-// apps/web/src/lib/auth.ts
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+'use client';
 
-export function useAuth() {
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
+
+const AuthContext = createContext<any>(null);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -16,7 +19,6 @@ export function useAuth() {
     };
     getUser();
 
-    // 状態変化の監視
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -29,5 +31,13 @@ export function useAuth() {
     };
   }, []);
 
-  return { user, isSignedIn, loading };
+  return (
+    <AuthContext.Provider value={{ user, isSignedIn, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 }

@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useAuth } from 'apps/web/src/hooks/useAuth';
+import { useAuth } from 'apps/web/src/lib/contexts/AuthContext';
 import { supabase } from 'apps/web/src/lib/supabaseClient';
 import { useState } from 'react';
 import { SignInModal } from '../SignInModal';
