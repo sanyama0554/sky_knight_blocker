@@ -12,6 +12,7 @@ import { supabase } from 'apps/web/src/lib/supabaseClient';
 import { useState } from 'react';
 import { SignInModal } from '../SignInModal';
 import { SignUpModal } from '../SignUpModal';
+import { RequireAuth } from './RequireAuth';
 
 export function Header() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
@@ -78,8 +79,10 @@ export function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             騎空士ブロッカー
           </Typography>
-          <Button color="inherit">ブロックリスト</Button>
-          <Button color="inherit">設定</Button>
+          <RequireAuth>
+            <Button color="inherit">ブロックリスト</Button>
+            <Button color="inherit">設定</Button>
+          </RequireAuth>
           <Button
             color="inherit"
             onClick={
