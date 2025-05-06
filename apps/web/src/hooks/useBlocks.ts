@@ -10,40 +10,61 @@ export const useBlocks = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const fetchBlocks = async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setError('ユーザーがログインしていません');
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('blocks')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) {
+        setError(translateErrorMessage(error.message));
+      } else {
+        setBlocks(data || []);
+      }
+    } catch (err) {
+      setError('データの取得中にエラーが発生しました');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBlocks = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
-        if (!user) {
-          setError('ユーザーがログインしていません');
-          setLoading(false);
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from('blocks')
-          .select('*')
-          .eq('user_id', user.id);
-
-        if (error) {
-          setError(translateErrorMessage(error.message));
-        } else {
-          setBlocks(data || []);
-        }
-      } catch (err) {
-        setError('データの取得中にエラーが発生しました');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchBlocks();
   }, []);
 
-  return { blocks, loading, error };
+  // ブロック解除処理
+  const deleteBlock = async (id: string) => {
+    setDeletingId(id);
+    setError(null);
+    try {
+      const { error } = await supabase.from('blocks').delete().eq('id', id);
+      if (error) {
+        setError(translateErrorMessage(error.message));
+      } else {
+        // 削除後にリストを再取得
+        await fetchBlocks();
+      }
+    } catch (err) {
+      setError('ブロック解除中にエラーが発生しました');
+      console.error(err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  return { blocks, loading, error, deleteBlock, deletingId };
 };

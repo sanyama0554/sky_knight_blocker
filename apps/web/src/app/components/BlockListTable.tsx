@@ -14,8 +14,7 @@ import { getUserProfileUrl } from '../../lib/getUserProfileUrl';
 import { useBlocks } from '../../hooks/useBlocks';
 
 export const BlockListTable = () => {
-  const { blocks, loading, error } = useBlocks();
-  console.log(blocks);
+  const { blocks, loading, error, deleteBlock, deletingId } = useBlocks();
 
   if (loading) return <div>読み込み中...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
@@ -28,6 +27,7 @@ export const BlockListTable = () => {
             <TableCell>ユーザーID</TableCell>
             <TableCell>備考</TableCell>
             <TableCell>プロフィールページへ</TableCell>
+            <TableCell>ブロック解除</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -48,6 +48,17 @@ export const BlockListTable = () => {
                   rel="noopener noreferrer"
                 >
                   プロフィールページへ
+                </Button>
+              </TableCell>
+              <TableCell align="right">
+                <Button
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  disabled={deletingId === row.id}
+                  onClick={() => deleteBlock(row.id)}
+                >
+                  {deletingId === row.id ? '解除中...' : 'ブロック解除'}
                 </Button>
               </TableCell>
             </TableRow>
