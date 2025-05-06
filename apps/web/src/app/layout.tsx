@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
-import { Header, Footer } from './components/common';
+import { Container } from '@mui/material';
+import { Footer, Header } from './components/common';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,7 +28,7 @@ export default function RootLayout({
         }}
       >
         <Header />
-        {children}
+        <Container maxWidth="md">{children}</Container>
         <Footer />
       </body>
     </html>
