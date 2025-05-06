@@ -10,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useAuth } from 'apps/web/src/lib/contexts/AuthContext';
 import { supabase } from 'apps/web/src/lib/supabaseClient';
+import { translateErrorMessage } from 'apps/web/src/lib/translateErrorMessage';
 import { useState } from 'react';
 import { SignInModal } from '../SignInModal';
 import { SignUpModal } from '../SignUpModal';
@@ -36,7 +37,7 @@ export function Header() {
     });
     if (error) {
       setToastSeverity('error');
-      setToastMessage(error.message);
+      setToastMessage(translateErrorMessage(error.message));
     } else {
       setToastSeverity('success');
       setIsSignInModalOpen(false);
@@ -49,7 +50,7 @@ export function Header() {
     const { error } = await supabase.auth.signOut();
     if (error) {
       setToastSeverity('error');
-      setToastMessage(error.message);
+      setToastMessage(translateErrorMessage(error.message));
     } else {
       setToastSeverity('success');
       setToastMessage('サインアウトしました');
