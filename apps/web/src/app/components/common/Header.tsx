@@ -66,7 +66,7 @@ export function Header() {
     });
     if (error) {
       setToastSeverity('error');
-      setToastMessage(error.message);
+      setToastMessage(translateErrorMessage(error.message));
     } else {
       setToastSeverity('success');
       setIsSignUpModalOpen(false);
