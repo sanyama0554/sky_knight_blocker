@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { getUserProfileUrl } from '../../lib/getUserProfileUrl';
 
@@ -31,38 +32,48 @@ export const BlockListTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {blocks.map((row) => (
-            <TableRow
-              key={row.blocked_user_id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell align="right">{row.blocked_user_id}</TableCell>
-              <TableCell align="right">{row.description}</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  href={getUserProfileUrl(row.blocked_user_id)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  プロフィールページへ
-                </Button>
-              </TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="small"
-                  disabled={deletingId === row.id}
-                  onClick={() => deleteBlock(row.id)}
-                >
-                  {deletingId === row.id ? '解除中...' : 'ブロック解除'}
-                </Button>
+          {blocks.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} align="center">
+                <Typography variant="body1" color="text.secondary">
+                  ブロック中のユーザーは存在しません
+                </Typography>
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            blocks.map((row) => (
+              <TableRow
+                key={row.blocked_user_id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell align="right">{row.blocked_user_id}</TableCell>
+                <TableCell align="right">{row.description}</TableCell>
+                <TableCell align="right">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    href={getUserProfileUrl(row.blocked_user_id)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    プロフィールページへ
+                  </Button>
+                </TableCell>
+                <TableCell align="right">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    disabled={deletingId === row.id}
+                    onClick={() => deleteBlock(row.id)}
+                  >
+                    {deletingId === row.id ? '解除中...' : 'ブロック解除'}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </TableContainer>
