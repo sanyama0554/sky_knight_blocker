@@ -1,7 +1,9 @@
 'use client';
 
 import {
+  Box,
   Button,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -17,7 +19,13 @@ import { useBlocks } from '../../hooks/useBlocks';
 export const BlockListTable = () => {
   const { blocks, loading, error, deleteBlock, deletingId } = useBlocks();
 
-  if (loading) return <div>読み込み中...</div>;
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
