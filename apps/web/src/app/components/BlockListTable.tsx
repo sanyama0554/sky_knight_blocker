@@ -25,7 +25,9 @@ export const BlockListTable = () => {
       </Box>
     );
   }
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (error && error.includes('ユーザーがログインしていません')) {
+    return <div style={{ color: 'red' }}>{error}</div>;
+  }
 
   return (
     <TableContainer>

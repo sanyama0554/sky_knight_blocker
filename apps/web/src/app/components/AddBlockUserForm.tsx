@@ -22,7 +22,7 @@ export const AddBlockUserForm = () => {
     'success',
   );
 
-  const { addBlock, error } = useBlocks();
+  const { addBlock } = useBlocks();
 
   const {
     register,
@@ -44,7 +44,7 @@ export const AddBlockUserForm = () => {
         setToastSeverity('success');
         reset();
       } else {
-        setToastMessage(error || 'ブロックリストへの追加に失敗しました');
+        setToastMessage('このユーザーはすでにブロックリストに登録されています');
         setToastSeverity('error');
       }
     } catch (error) {

@@ -92,6 +92,16 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
 
+      // 重複チェック
+      const isAlreadyBlocked = blocks.some(
+        (block) => block.blocked_user_id === blockedUserId,
+      );
+
+      if (isAlreadyBlocked) {
+        setError('このユーザーはすでにブロックリストに登録されています');
+        return false;
+      }
+
       const { error } = await supabase.from('blocks').insert([
         {
           user_id: user.id,
