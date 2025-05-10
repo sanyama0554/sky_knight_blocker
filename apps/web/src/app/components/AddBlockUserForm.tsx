@@ -11,24 +11,9 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { supabase } from '../../lib/supabaseClient';
 import { translateErrorMessage } from '../../lib/translateErrorMessage';
-
-// バリデーションスキーマ
-const formSchema = z.object({
-  userId: z
-    .string()
-    .min(1, 'ユーザーIDを入力してください')
-    .max(20, 'ユーザーIDは20文字以内で入力してください')
-    .regex(/^\d+$/, 'ユーザーIDは数字のみ入力可能です'),
-  description: z
-    .string()
-    .max(500, '備考は500文字以内で入力してください')
-    .optional(),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import { BlockFormData, blockFormSchema } from '../../schemas/block';
 
 export const AddBlockUserForm = () => {
   const [loading, setLoading] = useState(false);
@@ -43,11 +28,11 @@ export const AddBlockUserForm = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  } = useForm<BlockFormData>({
+    resolver: zodResolver(blockFormSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: BlockFormData) => {
     setLoading(true);
 
     try {
