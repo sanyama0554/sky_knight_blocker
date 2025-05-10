@@ -11,8 +11,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { supabase } from '../../lib/supabaseClient';
-import { translateErrorMessage } from '../../lib/translateErrorMessage';
+import { useBlocks } from '../../lib/contexts/BlocksContext';
 import { BlockFormData, blockFormSchema } from '../../schemas/block';
 
 export const AddBlockUserForm = () => {
@@ -22,6 +21,8 @@ export const AddBlockUserForm = () => {
   const [toastSeverity, setToastSeverity] = useState<'success' | 'error'>(
     'success',
   );
+
+  const { addBlock, error } = useBlocks();
 
   const {
     register,
@@ -36,19 +37,15 @@ export const AddBlockUserForm = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('blocks')
-        .insert([
-          { blocked_user_id: data.userId, description: data.description },
-        ]);
+      const success = await addBlock(data.userId, data.description);
 
-      if (error) {
-        setToastMessage(translateErrorMessage(error.message));
-        setToastSeverity('error');
-      } else {
+      if (success) {
         setToastMessage('ブロックリストに追加しました');
         setToastSeverity('success');
         reset();
+      } else {
+        setToastMessage(error || 'ブロックリストへの追加に失敗しました');
+        setToastSeverity('error');
       }
     } catch (error) {
       setToastMessage('エラーが発生しました');

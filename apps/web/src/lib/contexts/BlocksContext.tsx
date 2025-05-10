@@ -1,12 +1,25 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { translateErrorMessage } from '../lib/translateErrorMessage';
+'use client';
+
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
+import { translateErrorMessage } from '../translateErrorMessage';
 import { Block as BaseBlock } from '../types/block';
 
 // descriptionを追加したBlock型
 export type Block = BaseBlock & { description: string };
 
-export const useBlocks = () => {
+type BlocksContextType = {
+  blocks: Block[];
+  loading: boolean;
+  error: string | null;
+  deletingId: string | null;
+  addBlock: (blockedUserId: string, description?: string) => Promise<boolean>;
+  deleteBlock: (id: string) => Promise<void>;
+};
+
+const BlocksContext = createContext<BlocksContextType | undefined>(undefined);
+
+export function BlocksProvider({ children }: { children: React.ReactNode }) {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,13 +114,19 @@ export const useBlocks = () => {
     }
   };
 
-  return {
-    blocks,
-    loading,
-    error,
-    deleteBlock,
-    deletingId,
-    addBlock,
-    fetchBlocks,
-  };
-};
+  return (
+    <BlocksContext.Provider
+      value={{ blocks, loading, error, deletingId, addBlock, deleteBlock }}
+    >
+      {children}
+    </BlocksContext.Provider>
+  );
+}
+
+export function useBlocks() {
+  const context = useContext(BlocksContext);
+  if (context === undefined) {
+    throw new Error('useBlocks must be used within a BlocksProvider');
+  }
+  return context;
+}

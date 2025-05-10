@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { AuthProvider } from '../lib/contexts/AuthContext';
+import { BlocksProvider } from '../lib/contexts/BlocksContext';
 import { ClientLayout } from './ClientLayout';
 import './globals.css';
 
@@ -25,7 +27,11 @@ export default function RootLayout({
           flexDirection: 'column',
         }}
       >
-        <ClientLayout>{children}</ClientLayout>
+        <AuthProvider>
+          <BlocksProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </BlocksProvider>
+        </AuthProvider>
       </body>
     </html>
   );

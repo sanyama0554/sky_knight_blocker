@@ -12,9 +12,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { useBlocks } from '../../lib/contexts/BlocksContext';
 import { getUserProfileUrl } from '../../lib/getUserProfileUrl';
-
-import { useBlocks } from '../../hooks/useBlocks';
 
 export const BlockListTable = () => {
   const { blocks, loading, error, deleteBlock, deletingId } = useBlocks();
