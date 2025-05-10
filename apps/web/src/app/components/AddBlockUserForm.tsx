@@ -1,5 +1,6 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Alert,
   Box,
@@ -9,12 +10,27 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { supabase } from '../../lib/supabaseClient';
 import { translateErrorMessage } from '../../lib/translateErrorMessage';
 
+// バリデーションスキーマ
+const formSchema = z.object({
+  userId: z
+    .string()
+    .min(1, 'ユーザーIDを入力してください')
+    .max(20, 'ユーザーIDは20文字以内で入力してください')
+    .regex(/^\d+$/, 'ユーザーIDは数字のみ入力可能です'),
+  description: z
+    .string()
+    .max(500, '備考は500文字以内で入力してください')
+    .optional(),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
 export const AddBlockUserForm = () => {
-  const [userId, setUserId] = useState('');
-  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -22,25 +38,24 @@ export const AddBlockUserForm = () => {
     'success',
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(userId, description);
-    console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
 
-    if (!userId.trim()) {
-      setToastMessage('ユーザーIDを入力してください');
-      setToastSeverity('error');
-      setToastOpen(true);
-      return;
-    }
-
+  const onSubmit = async (data: FormData) => {
     setLoading(true);
 
     try {
       const { error } = await supabase
         .from('blocks')
-        .insert([{ blocked_user_id: userId, description }]);
+        .insert([
+          { blocked_user_id: data.userId, description: data.description },
+        ]);
 
       if (error) {
         setToastMessage(translateErrorMessage(error.message));
@@ -48,8 +63,7 @@ export const AddBlockUserForm = () => {
       } else {
         setToastMessage('ブロックリストに追加しました');
         setToastSeverity('success');
-        setUserId('');
-        setDescription('');
+        reset();
       }
     } catch (error) {
       setToastMessage('エラーが発生しました');
@@ -61,7 +75,11 @@ export const AddBlockUserForm = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 500, mt: 3 }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ maxWidth: 500, mt: 3 }}
+    >
       <Typography variant="h6" component="h2" gutterBottom>
         ブロックユーザー追加
       </Typography>
@@ -71,10 +89,11 @@ export const AddBlockUserForm = () => {
         label="ユーザーID"
         variant="outlined"
         margin="normal"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
+        {...register('userId')}
         placeholder="ブロックしたいユーザーのIDを入力"
         required
+        error={!!errors.userId}
+        helperText={errors.userId?.message}
       />
 
       <TextField
@@ -82,11 +101,12 @@ export const AddBlockUserForm = () => {
         label="備考"
         variant="outlined"
         margin="normal"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        {...register('description')}
         placeholder="ブロックする理由など（任意）"
         multiline
         rows={2}
+        error={!!errors.description}
+        helperText={errors.description?.message}
       />
 
       <Button
