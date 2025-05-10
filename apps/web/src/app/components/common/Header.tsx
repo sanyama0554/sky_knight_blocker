@@ -1,7 +1,7 @@
 'use client';
 
 import MenuIcon from '@mui/icons-material/Menu';
-import { Alert } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -90,24 +90,39 @@ export function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             騎空士ブロッカー
           </Typography>
-          <RequireAuth>
-            <Button color="inherit">ブロックリスト</Button>
-            <Button color="inherit">設定</Button>
-          </RequireAuth>
-          <Button
-            color="inherit"
-            onClick={
-              isSignedIn
-                ? handleSignOut
-                : () => {
-                    setEmail('');
-                    setPassword('');
-                    setIsSignInModalOpen(true);
-                  }
-            }
-          >
-            {isSignedIn ? 'ログアウト' : 'ログイン'}
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', height: 36 }}>
+            <RequireAuth>
+              <Button color="inherit" sx={{ height: 36 }}>
+                ブロックリスト
+              </Button>
+              <Button color="inherit" sx={{ height: 36 }}>
+                設定
+              </Button>
+            </RequireAuth>
+          </Box>
+          {loading ? (
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', ml: 2, height: 36 }}
+            >
+              <CircularProgress size={24} color="inherit" />
+            </Box>
+          ) : (
+            <Button
+              color="inherit"
+              sx={{ height: 36 }}
+              onClick={
+                isSignedIn
+                  ? handleSignOut
+                  : () => {
+                      setEmail('');
+                      setPassword('');
+                      setIsSignInModalOpen(true);
+                    }
+              }
+            >
+              {isSignedIn ? 'ログアウト' : 'ログイン'}
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <SignInModal

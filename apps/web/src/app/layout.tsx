@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { ClientLayout } from './ClientLayout';
 import './globals.css';
-
-import { Container } from '@mui/material';
-import { AuthProvider } from '../lib/contexts/AuthContext';
-import { Footer, Header } from './components/common';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,11 +25,7 @@ export default function RootLayout({
           flexDirection: 'column',
         }}
       >
-        <AuthProvider>
-          <Header />
-          <Container maxWidth="md">{children}</Container>
-          <Footer />
-        </AuthProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

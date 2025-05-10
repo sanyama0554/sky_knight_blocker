@@ -3,7 +3,17 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 
-const AuthContext = createContext<any>(null);
+type AuthContextType = {
+  user: any;
+  isSignedIn: boolean;
+  loading: boolean;
+};
+
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isSignedIn: false,
+  loading: true,
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
@@ -12,11 +22,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-      setIsSignedIn(!!data.user);
-      setLoading(false);
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user);
+        setIsSignedIn(!!data.user);
+      } catch (error) {
+        console.error('Error getting user:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     getUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
@@ -39,5 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }
