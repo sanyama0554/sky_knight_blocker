@@ -33,7 +33,19 @@ export const SearchForm = memo(
     }, [onSearch]);
 
     return (
-      <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          bgcolor: 'rgba(255,255,255,0.15)', // 半透明の白
+          borderRadius: 2,
+          px: 1,
+          py: 0.5,
+          boxShadow: '0 1px 4px 0 rgba(0,0,0,0.04)',
+          height: 40,
+        }}
+      >
         <TextField
           fullWidth
           variant="outlined"
@@ -44,16 +56,51 @@ export const SearchForm = memo(
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon />
+                <SearchIcon sx={{ color: 'primary.main', opacity: 0.8 }} />
               </InputAdornment>
             ),
+            sx: {
+              bgcolor: 'transparent',
+              color: 'primary.main',
+              borderRadius: 2,
+              height: 32,
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
+              '& input': {
+                color: 'primary.main',
+                '::placeholder': { color: 'grey.700', opacity: 0.7 },
+              },
+            },
+          }}
+          sx={{
+            mr: 1,
+            minWidth: 0,
+            maxWidth: 300,
+            '& .MuiInputBase-root': {
+              bgcolor: 'transparent',
+              color: 'primary.main',
+              borderRadius: 2,
+              height: 32,
+            },
           }}
         />
         <Button
           variant="contained"
           color="primary"
           onClick={handleClick}
-          sx={{ minWidth: 100 }}
+          sx={{
+            minWidth: 80,
+            height: 32,
+            borderRadius: 2,
+            boxShadow: 'none',
+            bgcolor: 'white',
+            color: 'primary.main',
+            fontWeight: 'bold',
+            '&:hover': {
+              bgcolor: 'grey.100',
+            },
+          }}
         >
           検索
         </Button>
