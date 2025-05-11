@@ -17,17 +17,19 @@ export default function Home() {
             sx={{
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
-              gap: 2,
-              alignItems: { md: 'flex-end', xs: 'stretch' },
-              mb: 4,
+              gap: 3,
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              width: '100%',
+              mb: 2,
             }}
           >
-            <Box sx={{ flex: 2 }}>
+            <Box sx={{ flex: 1.2, maxWidth: 400, width: '100%' }}>
               <AddBlockUserForm />
             </Box>
-          </Box>
-          <Box sx={{ mb: 4 }}>
-            <BlockListTable />
+            <Box sx={{ flex: 2.5, maxWidth: 900, width: '100%' }}>
+              <BlockListTable />
+            </Box>
           </Box>
         </Box>
       </RequireAuth>

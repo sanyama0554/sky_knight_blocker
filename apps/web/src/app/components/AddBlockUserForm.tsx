@@ -63,39 +63,55 @@ export default function AddBlockUserForm() {
         boxShadow: 2,
         p: { xs: 2, sm: 3 },
         maxWidth: 400,
+        minWidth: 320,
         width: '100%',
         mx: 'auto',
         mb: 2,
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'stretch',
         gap: 2,
       }}
     >
       <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
         ブロックユーザー追加
       </Typography>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
+        }}
+      >
         <TextField
           label="ユーザーID"
           fullWidth
           required
           margin="normal"
           {...register('userId')}
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: '100%' }}
         />
         <TextField
           label="備考"
           fullWidth
           margin="normal"
           {...register('description')}
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: '100%' }}
         />
         <Button
           type="submit"
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ height: 44, fontWeight: 'bold', borderRadius: 2, mt: 1 }}
+          sx={{
+            height: 44,
+            fontWeight: 'bold',
+            borderRadius: 2,
+            mt: 1,
+            width: '100%',
+          }}
           disabled={loading}
         >
           ブロックリストに追加
