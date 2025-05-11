@@ -15,6 +15,11 @@ type BlocksContextType = {
   deletingId: string | null;
   addBlock: (blockedUserId: string, description?: string) => Promise<boolean>;
   deleteBlock: (id: string) => Promise<void>;
+  page: number;
+  rowsPerPage: number;
+  totalCount: number;
+  handleChangePage: (newPage: number) => void;
+  handleChangeRowsPerPage: (newRowsPerPage: number) => void;
 };
 
 const BlocksContext = createContext<BlocksContextType | undefined>(undefined);
@@ -24,6 +29,9 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
 
   const fetchBlocks = async () => {
     setLoading(true);
@@ -38,10 +46,19 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      const { count } = await supabase
+        .from('blocks')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      setTotalCount(count || 0);
+
       const { data, error } = await supabase
         .from('blocks')
         .select('*')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .range(page * rowsPerPage, (page + 1) * rowsPerPage - 1)
+        .order('created_at', { ascending: false });
 
       if (error) {
         setError(translateErrorMessage(error.message));
@@ -58,7 +75,16 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetchBlocks();
-  }, []);
+  }, [page, rowsPerPage]);
+
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(0);
+  };
 
   // ブロック解除処理
   const deleteBlock = async (id: string) => {
@@ -126,7 +152,19 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <BlocksContext.Provider
-      value={{ blocks, loading, error, deletingId, addBlock, deleteBlock }}
+      value={{
+        blocks,
+        loading,
+        error,
+        deletingId,
+        addBlock,
+        deleteBlock,
+        page,
+        rowsPerPage,
+        totalCount,
+        handleChangePage,
+        handleChangeRowsPerPage,
+      }}
     >
       {children}
     </BlocksContext.Provider>
