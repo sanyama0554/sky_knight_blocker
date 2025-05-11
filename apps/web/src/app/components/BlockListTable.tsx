@@ -33,13 +33,6 @@ export const BlockListTable = () => {
     searchQuery,
   } = useBlocks();
 
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
   if (error && error.includes('ユーザーがログインしていません')) {
     return <div style={{ color: 'red' }}>{error}</div>;
   }
@@ -64,7 +57,9 @@ export const BlockListTable = () => {
               <TableCell sx={{ whiteSpace: 'nowrap', width: 120 }}>
                 ユーザーID
               </TableCell>
-              <TableCell sx={{ width: 300 }}>備考</TableCell>
+              <TableCell align="left" sx={{ width: 300 }}>
+                備考
+              </TableCell>
               <TableCell sx={{ whiteSpace: 'nowrap', width: 80 }}>
                 プロフィール
               </TableCell>
@@ -74,7 +69,15 @@ export const BlockListTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {blocks.length === 0 ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  <Box sx={{ py: 4 }}>
+                    <CircularProgress />
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ) : blocks.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography variant="body1" color="text.secondary">
@@ -91,7 +94,7 @@ export const BlockListTable = () => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell align="right">{row.blocked_user_id}</TableCell>
-                  <TableCell align="right">{row.description}</TableCell>
+                  <TableCell align="left">{row.description}</TableCell>
                   <TableCell align="right">
                     <IconButton
                       component="a"
