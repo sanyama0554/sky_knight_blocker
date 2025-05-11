@@ -43,7 +43,18 @@ export const BlockListTable = () => {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box
+      sx={{
+        bgcolor: 'background.paper',
+        borderRadius: 3,
+        boxShadow: 2,
+        p: { xs: 2, sm: 3 },
+        maxWidth: 900,
+        width: '100%',
+        mx: 'auto',
+        mb: 2,
+      }}
+    >
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
