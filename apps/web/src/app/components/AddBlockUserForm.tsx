@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { useBlocks } from '../../lib/contexts/BlocksContext';
 import { BlockFormData, blockFormSchema } from '../../schemas/block';
 
-export const AddBlockUserForm = () => {
+export default function AddBlockUserForm() {
   const [loading, setLoading] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -24,12 +24,7 @@ export const AddBlockUserForm = () => {
 
   const { addBlock } = useBlocks();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<BlockFormData>({
+  const { register, handleSubmit, reset } = useForm<BlockFormData>({
     resolver: zodResolver(blockFormSchema),
   });
 
@@ -56,59 +51,65 @@ export const AddBlockUserForm = () => {
     }
   };
 
+  const handleCloseToast = () => {
+    setToastOpen(false);
+  };
+
   return (
     <Box
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      sx={{ maxWidth: 500, mt: 3 }}
+      sx={{
+        bgcolor: 'background.paper',
+        borderRadius: 3,
+        boxShadow: 2,
+        p: { xs: 2, sm: 3 },
+        maxWidth: 400,
+        width: '100%',
+        mx: 'auto',
+        mb: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+      }}
     >
-      <Typography variant="h6" component="h2" gutterBottom>
+      <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
         ブロックユーザー追加
       </Typography>
-
-      <TextField
-        fullWidth
-        label="ユーザーID"
-        variant="outlined"
-        margin="normal"
-        {...register('userId')}
-        placeholder="ブロックしたいユーザーのIDを入力"
-        required
-        error={!!errors.userId}
-        helperText={errors.userId?.message}
-      />
-
-      <TextField
-        fullWidth
-        label="備考"
-        variant="outlined"
-        margin="normal"
-        {...register('description')}
-        placeholder="ブロックする理由など（任意）"
-        multiline
-        rows={2}
-        error={!!errors.description}
-        helperText={errors.description?.message}
-      />
-
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        sx={{ mt: 2 }}
-        disabled={loading}
-      >
-        {loading ? '処理中...' : 'ブロックリストに追加'}
-      </Button>
-
+      <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+        <TextField
+          label="ユーザーID"
+          fullWidth
+          required
+          margin="normal"
+          {...register('userId')}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="備考"
+          fullWidth
+          margin="normal"
+          {...register('description')}
+          sx={{ mb: 2 }}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ height: 44, fontWeight: 'bold', borderRadius: 2, mt: 1 }}
+          disabled={loading}
+        >
+          ブロックリストに追加
+        </Button>
+      </form>
       <Snackbar
         open={toastOpen}
-        autoHideDuration={6000}
-        onClose={() => setToastOpen(false)}
+        autoHideDuration={3000}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
-          onClose={() => setToastOpen(false)}
           severity={toastSeverity}
+          onClose={handleCloseToast}
           sx={{ width: '100%' }}
         >
           {toastMessage}
@@ -116,4 +117,4 @@ export const AddBlockUserForm = () => {
       </Snackbar>
     </Box>
   );
-};
+}

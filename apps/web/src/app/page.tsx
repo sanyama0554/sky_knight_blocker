@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Container, Typography } from '@mui/material';
-import { AddBlockUserForm } from './components/AddBlockUserForm';
+import AddBlockUserForm from './components/AddBlockUserForm';
 import { BlockListTable } from './components/BlockListTable';
 import { RequireAuth } from './components/common/RequireAuth';
 
