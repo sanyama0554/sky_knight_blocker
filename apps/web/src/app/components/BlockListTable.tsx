@@ -1,8 +1,9 @@
 'use client';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Box,
-  Button,
   CircularProgress,
   Table,
   TableBody,
@@ -13,6 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import { useBlocks } from '../../lib/contexts/BlocksContext';
 import { getUserProfileUrl } from '../../lib/getUserProfileUrl';
 
@@ -85,27 +87,30 @@ export const BlockListTable = () => {
                   <TableCell align="right">{row.blocked_user_id}</TableCell>
                   <TableCell align="right">{row.description}</TableCell>
                   <TableCell align="right">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
+                    <IconButton
+                      component="a"
                       href={getUserProfileUrl(row.blocked_user_id)}
                       target="_blank"
                       rel="noopener noreferrer"
+                      color="primary"
+                      size="small"
+                      aria-label="プロフィールページへ"
+                      title="プロフィールページへ"
                     >
-                      プロフィールページへ
-                    </Button>
+                      <OpenInNewIcon />
+                    </IconButton>
                   </TableCell>
                   <TableCell align="right">
-                    <Button
-                      variant="contained"
+                    <IconButton
                       color="error"
                       size="small"
+                      aria-label="ブロック解除"
+                      title="ブロック解除"
                       disabled={deletingId === row.id}
                       onClick={() => deleteBlock(row.id)}
                     >
-                      {deletingId === row.id ? '解除中...' : 'ブロック解除'}
-                    </Button>
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
