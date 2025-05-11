@@ -28,6 +28,7 @@ export const BlockListTable = () => {
     totalCount,
     handleChangePage,
     handleChangeRowsPerPage,
+    searchQuery,
   } = useBlocks();
 
   if (loading) {
@@ -58,7 +59,9 @@ export const BlockListTable = () => {
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography variant="body1" color="text.secondary">
-                    ブロック中のユーザーは存在しません
+                    {searchQuery
+                      ? '検索条件に一致するブロック中のユーザーは存在しません'
+                      : 'ブロック中のユーザーは存在しません'}
                   </Typography>
                 </TableCell>
               </TableRow>

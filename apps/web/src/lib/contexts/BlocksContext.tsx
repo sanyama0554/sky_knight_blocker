@@ -20,6 +20,9 @@ type BlocksContextType = {
   totalCount: number;
   handleChangePage: (newPage: number) => void;
   handleChangeRowsPerPage: (newRowsPerPage: number) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  executeSearch: () => void;
 };
 
 const BlocksContext = createContext<BlocksContextType | undefined>(undefined);
@@ -32,6 +35,7 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchBlocks = async () => {
     setLoading(true);
@@ -46,17 +50,22 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const { count } = await supabase
+      let query = supabase
         .from('blocks')
-        .select('*', { count: 'exact', head: true })
+        .select('*', { count: 'exact' })
         .eq('user_id', user.id);
+
+      if (searchQuery) {
+        query = query.or(
+          `blocked_user_id.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`,
+        );
+      }
+
+      const { count } = await query;
 
       setTotalCount(count || 0);
 
-      const { data, error } = await supabase
-        .from('blocks')
-        .select('*')
-        .eq('user_id', user.id)
+      const { data, error } = await query
         .range(page * rowsPerPage, (page + 1) * rowsPerPage - 1)
         .order('created_at', { ascending: false });
 
@@ -84,6 +93,11 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
   const handleChangeRowsPerPage = (newRowsPerPage: number) => {
     setRowsPerPage(newRowsPerPage);
     setPage(0);
+  };
+
+  const executeSearch = () => {
+    setPage(0);
+    fetchBlocks();
   };
 
   // ブロック解除処理
@@ -164,6 +178,9 @@ export function BlocksProvider({ children }: { children: React.ReactNode }) {
         totalCount,
         handleChangePage,
         handleChangeRowsPerPage,
+        searchQuery,
+        setSearchQuery,
+        executeSearch,
       }}
     >
       {children}
