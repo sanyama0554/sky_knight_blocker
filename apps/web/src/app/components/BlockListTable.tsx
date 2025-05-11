@@ -61,10 +61,16 @@ export const BlockListTable = () => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>ユーザーID</TableCell>
-              <TableCell>備考</TableCell>
-              <TableCell>プロフィールページへ</TableCell>
-              <TableCell>ブロック解除</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap', width: 120 }}>
+                ユーザーID
+              </TableCell>
+              <TableCell sx={{ width: 300 }}>備考</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap', width: 80 }}>
+                プロフィール
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap', width: 60 }}>
+                解除
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
